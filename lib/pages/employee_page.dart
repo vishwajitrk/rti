@@ -125,11 +125,14 @@ class EmployeePage extends StatelessWidget {
                     key: Key(employee.name),
                     onDismissed: (direction) {
                       employees.removeAt(index);
-                      context
-                          .read<EmployeesBloc>()
-                          .deleteEmployee(employee.copyWith(
-                            deletedAt: DateTime.now().toString(),
-                          ));
+                      Future.delayed(const Duration(seconds: 2), () async {
+                        context
+                            .read<EmployeesBloc>()
+                            .deleteEmployee(employee.copyWith(
+                              deletedAt: DateTime.now().toString(),
+                            ));
+                      });
+
                       final snackBar = SnackBar(
                         content: const Text('Employee data has been deleted'),
                         action: SnackBarAction(
