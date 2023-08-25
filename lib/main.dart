@@ -1,20 +1,44 @@
 import 'package:flutter/material.dart';
-
-import 'src/app.dart';
-import 'src/settings/settings_controller.dart';
-import 'src/settings/settings_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rti/blocs/employee/employees_bloc.dart';
+import 'package:rti/config/theme.dart';
+import 'package:rti/constants/navigation_routes.dart';
+import 'package:rti/storage/database_helper.dart';
+// import 'simple_bloc_observer.dart';
 
 void main() async {
-  // Set up the SettingsController, which will glue user settings to multiple
-  // Flutter Widgets.
-  final settingsController = SettingsController(SettingsService());
+  WidgetsFlutterBinding.ensureInitialized();
 
-  // Load the user's preferred theme while the splash screen is displayed.
-  // This prevents a sudden theme change when the app is first displayed.
-  await settingsController.loadSettings();
+  // initialize the database
+  await dbHelper.init();
 
-  // Run the app and pass in the SettingsController. The app listens to the
-  // SettingsController for changes, then passes it further down to the
-  // SettingsView.
-  runApp(MyApp(settingsController: settingsController));
+  runApp(const App());
+
+  // BlocOverrides.runZoned(
+  //   () {
+  //     runApp(const App());
+  //   },
+  //   blocObserver: SimpleBlocObserver(),
+  // );
+}
+
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => EmployeesBloc()..getEmployees(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'BloC Pattern - Employees',
+        onGenerateRoute: generateRoute,
+        initialRoute: Routing.landing,
+        theme: AppTheme.of(context),
+      ),
+    );
+  }
 }
