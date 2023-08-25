@@ -60,10 +60,27 @@ class EmployeePage extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (currentEmployees.isNotEmpty)
-                  _employee(currentEmployees, 'Current'),
-                if (previousEmployees.isNotEmpty)
-                  _employee(previousEmployees, 'Previous'),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height - 160,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (currentEmployees.isNotEmpty)
+                          _employee(currentEmployees, 'Current'),
+                        if (previousEmployees.isNotEmpty)
+                          _employee(previousEmployees, 'Previous'),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  child: const Text(
+                    'Swipe left to delete',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
               ],
             );
           } else {
@@ -98,6 +115,7 @@ class EmployeePage extends StatelessWidget {
         ListView.builder(
           shrinkWrap: true,
           itemCount: employees.length,
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             final employee = employees[index];
             return Card(
@@ -137,7 +155,7 @@ class EmployeePage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    child: _employeesCard(
+                    child: _employeeCard(
                       context,
                       employees[index],
                     )));
@@ -147,7 +165,7 @@ class EmployeePage extends StatelessWidget {
     );
   }
 
-  Widget _employeesCard(
+  Widget _employeeCard(
     BuildContext context,
     Employee employee,
   ) {
@@ -194,32 +212,3 @@ class EmployeePage extends StatelessWidget {
     );
   }
 }
-
-// BlocBuilder<EmployeesBloc, EmployeesState>(
-//                   builder: (context, state) {
-//                     return Row(
-//                       children: [
-//                         IconButton(
-//                           onPressed: () {
-//                             context.read<EmployeesBloc>().add(
-//                                   UpdateEmployee(
-//                                     employee: employee.copyWith(startDate: ''),
-//                                   ),
-//                                 );
-//                           },
-//                           icon: const Icon(Icons.add_task),
-//                         ),
-//                         IconButton(
-//                           onPressed: () {
-//                             context.read<EmployeesBloc>().add(
-//                                   DeleteEmployee(
-//                                     employee: employee.copyWith(endDate: ''),
-//                                   ),
-//                                 );
-//                           },
-//                           icon: const Icon(Icons.cancel),
-//                         ),
-//                       ],
-//                     );
-//                   },
-//                 ),

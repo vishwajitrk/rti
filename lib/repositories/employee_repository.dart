@@ -5,12 +5,10 @@ import 'package:sqflite/sqlite_api.dart';
 class EmployeeRepository {
   Future<List<Employee>> getEmployees() async {
     final datas = await dbHelper.fetch(DatabaseHelper.employeeTable);
-    print('datas');
-    print(datas);
-    List<Employee> todos = [];
+    List<Employee> employees = [];
     for (var item in datas) {
       if (item['deletedAt'] == null || item['deletedAt'] == '') {
-        todos.add(Employee(
+        employees.add(Employee(
           id: item['id'] as int,
           name: item['name'] as String,
           role: item['role'] as String,
@@ -19,7 +17,7 @@ class EmployeeRepository {
         ));
       }
     }
-    return todos;
+    return employees;
   }
 
   Future<dynamic> addEmployee(Employee employee) async {
@@ -37,7 +35,8 @@ class EmployeeRepository {
     required int id,
   }) async {
     return await database.transaction((txn) async {
-      await txn.rawDelete('DELETE FROM todo where id = $id');
+      await txn.rawDelete(
+          'DELETE FROM ${DatabaseHelper.employeeTable} where id = $id');
     });
   }
 }

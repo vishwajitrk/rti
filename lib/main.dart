@@ -38,6 +38,7 @@ class App extends StatelessWidget {
         onGenerateRoute: generateRoute,
         initialRoute: Routing.landing,
         theme: AppTheme.of(context),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

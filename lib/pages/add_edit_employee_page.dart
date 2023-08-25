@@ -39,11 +39,27 @@ class AddEditEmployeePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: AppBarTitle(
-            title: '${employee != null ? 'Edit' : 'Add'} Employee Details'),
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-      ),
+          title: AppBarTitle(
+              title: '${employee != null ? 'Edit' : 'Add'} Employee Details'),
+          centerTitle: false,
+          automaticallyImplyLeading: false,
+          actions: [
+            if (employee != null)
+              IconButton(
+                onPressed: () {
+                  context
+                      .read<EmployeesBloc>()
+                      .deleteEmployee(employee!.copyWith(
+                        deletedAt: DateTime.now().toString(),
+                      ));
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.delete_outline,
+                  color: AppColors.white,
+                ),
+              ),
+          ]),
       body: BlocBuilder<EmployeesBloc, EmployeesState>(
         builder: (context, state) {
           if (state is EmployeesLoading) {
@@ -119,7 +135,12 @@ class AddEditEmployeePage extends StatelessWidget {
                                 },
                               ),
                             ),
-                            const SizedBox(width: 5),
+                            const SizedBox(
+                                width: 50,
+                                child: Icon(
+                                  Icons.arrow_forward,
+                                  color: AppColors.themePrimary,
+                                )),
                             Expanded(
                               child: MTextField(
                                 hintText: 'No date',
@@ -221,7 +242,7 @@ class AddEditEmployeePage extends StatelessWidget {
         builder: (context) {
           return Container(
             padding: const EdgeInsets.symmetric(vertical: 20),
-            height: 250,
+            height: 230,
             alignment: Alignment.center,
             child: ListView.separated(
                 itemCount: roles.length,
